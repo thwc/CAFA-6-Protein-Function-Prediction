@@ -1,0 +1,21 @@
+# Bỏ qua các file dữ liệu input (nếu bạn có lỡ tải về máy)
+/input/*
+!/input/.gitkeep
+*.npy
+*.fasta
+*.obo
+
+# Bỏ qua các file kết quả submission (vì nó rất nặng)
+output/*.tsv
+output/*.csv
+
+# Bỏ qua các file checkpoint mô hình (nặng)
+*.pth
+*.pt
+*.h5
+
+# Bỏ qua file rác hệ thống
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+.env

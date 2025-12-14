@@ -1,0 +1,11 @@
+numpy
+pandas
+matplotlib
+seaborn
+tqdm
+scikit-learn
+torch
+torchmetrics
+biopython
+obonet
+networkx
