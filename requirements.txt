@@ -1,10 +1,16 @@
+# --- PHẦN PYTORCH GPU (CUDA 11.8) ---
+# Lưu ý: Các link này dành riêng cho Python 3.11 trên Windows
+https://download.pytorch.org/whl/cu118/torch-2.5.1%2Bcu118-cp311-cp311-win_amd64.whl
+https://download.pytorch.org/whl/cu118/torchvision-0.20.1%2Bcu118-cp311-cp311-win_amd64.whl
+https://download.pytorch.org/whl/cu118/torchaudio-2.5.1%2Bcu118-cp311-cp311-win_amd64.whl
+
+# --- CÁC THƯ VIỆN KHÁC ---
 numpy
 pandas
 matplotlib
 seaborn
 tqdm
 scikit-learn
-torch
 torchmetrics
 biopython
 obonet
