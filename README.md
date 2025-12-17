@@ -1,99 +1,143 @@
-# CAFA 6 Protein Function Prediction - Team 0165_INT34057
+# CAFA 6 Protein Function Prediction
 
-## 👥 Thành viên nhóm
-* **Lê Trọng Thực** - MSSV: 23020165
----
+Dự án này chứa mã nguồn cho cuộc thi **CAFA 6 Protein Function Prediction**. Giải pháp được xây dựng dựa trên sự kết hợp đa dạng các phương pháp:
+* **Tra cứu dữ liệu:** Exact Match (Khớp chuỗi chính xác).
+* **Machine Learning:** kNN (K-Nearest Neighbors).
+* **Deep Learning:** MLP, 1D-CNN + SE-ResNet-MLP, Deep Residual MLP.
 
-## 📖 Giới thiệu
-Dự án này sử dụng chiến lược **Ensemble 3 luồng (Three-stream Ensemble)** để dự đoán chức năng protein (Gene Ontology). Nhóm kết hợp 3 kiến trúc mô hình học sâu khác nhau để tối ưu hóa độ chính xác và khả năng tổng quát hóa.
+Tất cả các dự đoán từ các mô hình trên cuối cùng được tổng hợp tối ưu bằng phương pháp **Ensemble** để đưa ra kết quả cuối cùng.
 
-### 🏗️ Kiến trúc hệ thống
-```mermaid
-graph LR
-    A[Input Data] --> B(ESM-2 Embeddings)
-    A --> C(Sequence One-Hot)
-    A --> D(ProtBERT Embeddings)
+## Yêu cầu hệ thống (Prerequisites)
 
-    B --> E[Model 1: MLP]
-    C --> F[Model 2: 1D-CNN]
-    D --> G[Model 3: Transformer/BLAST]
+Để chạy code trên máy cục bộ (Local Machine), bạn cần cài đặt:
 
-    E --> H(Score 1)
-    F --> I(Score 2)
-    G --> J(Score 3)
+* **OS:** Linux (Ubuntu 20.04+) hoặc Windows 10/11 (khuyên dùng WSL2).
+* **Python:** 3.8 trở lên.
+* **GPU:** Khuyến nghị NVIDIA GPU với VRAM tối thiểu 8GB (để train các model ResNet/CNN). Cần cài đặt CUDA tương thích với phiên bản PyTorch.
 
-    H --> K{Ensemble Blending}
-    I --> K
-    J --> K
+## Cài đặt (Installation)
 
-    K --> L[Final Submission]
-    style K fill:#007bff,stroke:#333,stroke-width:2px,color:#fff
-```
-### 📂 Cấu trúc dự án
-- `1_train_models/`: Chứa 3 notebook đại diện cho 3 phương pháp độc lập.
-  - `01_ESM2_MLP.ipynb`: Mô hình Deep Learning dựa trên ESM-2 Embeddings (Baseline).
-  - `02_1D_CNN.ipynb`: Mô hình CNN 1 chiều để bắt các motif cục bộ.
-  - `03_ProtBERT.ipynb`: Mô hình dựa trên ProtBERT Embeddings.
-- `2_ensemble/`: Chứa mã nguồn để gộp kết quả.
-  - `04_Ensemble_Blending.ipynb`: Tính trung bình có trọng số từ 3 kết quả trên.
-- `output/`: Thư mục chứa các file submission (không upload lên GitHub để tiết kiệm dung lượng).
+1.  **Clone repository:**
+    ```bash
+    git clone https://github.com/thwc/CAFA-6-Protein-Function-Prediction.git
+    cd ten-repo-cua-ban
+    ```
 
-## 🚀 Hướng dẫn chạy (Workflow)
-Để tái lập kết quả, cần chạy theo thứ tự sau:
+2.  **Tạo môi trường ảo (Virtual Environment):**
+    Khuyên dùng Anaconda hoặc venv để quản lý thư viện.
+    ```bash
+    python -m venv venv
+    # Windows:
+    .\venv\Scripts\activate
+    # Linux/Mac:
+    source venv/bin/activate
+    ```
 
-### 1. **Cài đặt thư viện:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-### 2. Giai đoạn 1: Huấn luyện & Dự đoán độc lập
-Trong giai đoạn này, nhóm chạy 3 notebook riêng biệt để tạo ra 3 bộ dự đoán (submission files) khác nhau. Mỗi notebook đại diện cho một phương pháp tiếp cận đặc thù.
+3.  **Cài đặt các thư viện cần thiết:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-#### 🔹 Model 1: ESM-2 + MLP (Baseline)
-* **Notebook:** `1_train_models/01_ESM2_MLP.ipynb`
-* **Mô tả:** Sử dụng embeddings từ mô hình ngôn ngữ **ESM-2** (Meta AI) kết hợp với mạng nơ-ron truyền thẳng (MLP - Multi Layer Perceptron) 3 lớp ẩn [1024, 512, 256].
-* **Dữ liệu đầu vào:** `cafa-5-ems-2-embeddings-numpy`
-* **Đầu ra:** File `output/submission_1.tsv`
-* **Điểm đặc biệt:** Nắm bắt tốt ngữ nghĩa toàn cục của protein, đóng vai trò là "xương sống" cho hệ thống Ensemble.
+## Cấu trúc thư mục & Dữ liệu (Data Setup)
 
-#### 🔹 Model 2: 1D-CNN (Local Motifs)
-* **Notebook:** `1_train_models/02_1D_CNN.ipynb`
-* **Mô tả:** Sử dụng mạng tích chập 1 chiều (**1D-Convolutional Neural Network**) để quét qua chuỗi protein.
-* **Dữ liệu đầu vào:** Tương thích với ESM-2 hoặc ProtBERT embeddings.
-* **Đầu ra:** File `output/submission_2.tsv`
-* **Điểm đặc biệt:** Mô hình này chuyên biệt trong việc phát hiện các **motif cục bộ** (các đoạn trình tự ngắn lặp lại có chức năng sinh học) mà mô hình MLP có thể bỏ sót.
+Do kích thước lớn, thư mục `input` và `output` **không** được bao gồm trong repo này. Bạn cần thiết lập thủ công như sau:
 
-#### 🔹 Model 3: ProtBERT / Multi-Embedding
-* **Notebook:** `1_train_models/03_ProtBERT.ipynb`
-* **Mô tả:** Sử dụng embeddings từ **ProtBERT** (Google) hoặc T5 để đa dạng hóa không gian đặc trưng.
-* **Dữ liệu đầu vào:** `protbert-embeddings-for-cafa5` hoặc `t5embeds`.
-* **Đầu ra:** File `output/submission_3.tsv`
-* **Điểm đặc biệt:** Cung cấp góc nhìn khác về dữ liệu (Representation Diversity), giúp giảm thiểu sai số khi ensemble với ESM-2.
+1.  **Tải dữ liệu:** 
+Tải dataset chính thức từ [Kaggle CAFA 6 Competition](https://www.kaggle.com/competitions/cafa-6-protein-function-prediction).
 
----
+Tải các dataset khác
+  blast-quick-sprof-zero-pred: https://www.kaggle.com/code/taylorsamarel/cafa-6-protein-function-starter-eda-model
+  cafa-5-ems-2-embeddings-numpy: https://www.kaggle.com/datasets/viktorfairuschin/cafa-5-ems-2-embeddings-numpy
+  cafa-6-t5-embeddings: https://www.kaggle.com/datasets/lolik228/cafa-6-t5-embeddings
+  cafa6-t5-embeddings: https://www.kaggle.com/datasets/anoreo/cafa6-t5-embeddings
+  protein-go-annotations: https://www.kaggle.com/datasets/seddiktrk/protein-go-annotations
+  train_targets_top500: https://www.kaggle.com/datasets/siddhvr/train-targets-top500
+2.  **Sắp xếp thư mục:** Tạo thư mục `input` tại thư mục gốc và giải nén dữ liệu vào đó.
 
-### 3. Giai đoạn 2: Ensemble (Kết hợp kết quả)
-Đây là bước quan trọng nhất để tổng hợp sức mạnh của cả 3 mô hình trên.
+Cấu trúc thư mục dự kiến:
 
-* **Notebook:** `2_ensemble/04_Ensemble_Blending.ipynb`
-* **Phương pháp:** Weighted Averaging (Trung bình cộng có trọng số).
-* **Đầu vào:** 3 file `submission_*.tsv` từ Giai đoạn 1.
-* **Công thức:**
-    
-    $$Score_{Final} = (w_1 \times Score_{MLP}) + (w_2 \times Score_{CNN}) + (w_3 \times Score_{ProtBERT})$$
-    
-    *Trong đó bộ trọng số được thiết lập là:*
-    * $w_1 = 0.5$ (ESM-2 - Mô hình tốt nhất)
-    * $w_2 = 0.3$ (1D-CNN)
-    * $w_3 = 0.2$ (ProtBERT)
+```text
+|   README.md
+|   requirements.txt
+|   
++---1_train_models
+|       01_Basic-MLP.ipynb
+|       02_1D-CNN_SE-ResNet-MLP.ipynb
+|       03_Plain-ResNet-MLP.ipynb
+|       04_KNN_ExactMatch.ipynb
+|
++---2_ensemble
+|       05_Ensemble_Blending.ipynb
+|
++---input
+|   |   .gitkeep
+|   |   blast-quick-sprof-zero-pred.zip
+|   |   cafa-5-ems-2-embeddings-numpy.zip
+|   |   cafa-6-t5-embeddings.zip
+|   |   cafa6-t5-embeddings.zip
+|   |   protein-go-annotations.zip
+|   |   train_targets_top500.zip
+|   |
+|   +---blast-quick-sprof-zero-pred
+|   |       submission.tsv
+|   |
+|   +---cafa-5-ems-2-embeddings-numpy
+|   |       test_embeddings.npy
+|   |       test_ids.npy
+|   |       train_embeddings.npy
+|   |       train_ids.npy
+|   |
+|   +---cafa-6-protein-function-prediction
+|   |   |   IA.tsv
+|   |   |   sample_submission.tsv
+|   |   |
+|   |   +---Test
+|   |   |       testsuperset-taxon-list.tsv
+|   |   |       testsuperset.fasta
+|   |   |
+|   |   \---Train
+|   |           go-basic.obo
+|   |           train_sequences.fasta
+|   |           train_taxonomy.tsv
+|   |           train_terms.tsv
+|   |
+|   +---cafa-6-t5-embeddings
+|   |       test_embeds.npy
+|   |       test_ids.npy
+|   |       train_embeds.npy
+|   |       train_ids.npy
+|   |
+|   +---cafa6-t5-embeddings
+|   |       test_embeddings_esm2.npy
+|   |       test_ids_esm2.npy
+|   |       train_embeddings_esm2.npy
+|   |       train_ids_esm2.npy
+|   |       __huggingface_repos__.json
+|   |
+|   +---protein-go-annotations
+|   |       goa_uniprot_all.csv
+|   |
+|   \---train_targets_top500
+|           train_targets_top500.npy
+|
++---models
+|       cnn_best.pth
+|
+\---output
+        .gitkeep
+        submission.tsv
+        submission_mlp.tsv
+        submission_hybrid.tsv
+        submission_resnet.tsv
+        submission_exact.tsv
+        submission_knn.tsv
+```        
+## Hướng dẫn chạy
 
-* **Cách chạy:**
-    1. Đảm bảo đã có đủ 3 file submission trong thư mục `output/`.
-    2. Chạy notebook `04_Ensemble_Blending.ipynb`.
-    3. Kết quả cuối cùng sẽ được lưu tại: `output/final_submission.tsv`.
+1. **Train models**
+   - Chạy lần lượt các notebook trong thư mục `1_train_models`.
+   - Mỗi notebook sẽ tạo ra một file `submission_*.tsv`.
 
----
-**⚠️ Lưu ý về dữ liệu:**
-Các notebook trên yêu cầu bộ dữ liệu embeddings rất lớn. Nếu chạy trên máy cá nhân, cần tải các dataset sau từ Kaggle và đặt vào thư mục `input/` (cần cấu hình lại đường dẫn trong code nếu khác biệt):
-1. `cafa-5-ems-2-embeddings-numpy`
-2. `protbert-embeddings-for-cafa5`
-3. `t5embeds`
+2. **Tạo file submission cuối cùng**
+   - Sau khi có các file `submission_*.tsv`, chạy notebook `05_Ensemble_Blending.ipynb`.
+   - Notebook này sẽ kết hợp các submission trước để tạo ra file `submission.tsv` cuối cùng, sẵn sàng để nộp.

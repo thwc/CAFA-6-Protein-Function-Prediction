@@ -15,3 +15,6 @@ torchmetrics
 biopython
 obonet
 networkx
+transformers 
+
+
