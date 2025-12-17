@@ -138,7 +138,7 @@ Cấu trúc thư mục dự kiến:
 
 1. **Train models**
    - Chạy lần lượt các notebook trong thư mục `1_train_models`.
-   - Mỗi notebook sẽ tạo ra một file `submission_*.tsv`.
+   - Mỗi notebook sẽ tạo ra một file `submission_*.tsv`, trừ notebook `04_KNN_ExactMatch.ipynb` tạo 2 file.
 
 2. **Tạo file submission cuối cùng**
    - Sau khi có các file `submission_*.tsv`, chạy notebook `05_Ensemble_Blending.ipynb`.
