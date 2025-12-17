@@ -20,7 +20,6 @@ Tất cả các dự đoán từ các mô hình trên cuối cùng được tổ
 1.  **Clone repository:**
     ```bash
     git clone https://github.com/thwc/CAFA-6-Protein-Function-Prediction.git
-    cd ten-repo-cua-ban
     ```
 
 2.  **Tạo môi trường ảo (Virtual Environment):**
@@ -42,17 +41,20 @@ Tất cả các dự đoán từ các mô hình trên cuối cùng được tổ
 
 Do kích thước lớn, thư mục `input` và `output` **không** được bao gồm trong repo này. Bạn cần thiết lập thủ công như sau:
 
-1.  **Tải dữ liệu:** 
-Tải dataset chính thức từ [Kaggle CAFA 6 Competition](https://www.kaggle.com/competitions/cafa-6-protein-function-prediction).
+### 1. Tải dữ liệu
 
-Tải các dataset khác
-  blast-quick-sprof-zero-pred: https://www.kaggle.com/code/taylorsamarel/cafa-6-protein-function-starter-eda-model
-  cafa-5-ems-2-embeddings-numpy: https://www.kaggle.com/datasets/viktorfairuschin/cafa-5-ems-2-embeddings-numpy
-  cafa-6-t5-embeddings: https://www.kaggle.com/datasets/lolik228/cafa-6-t5-embeddings
-  cafa6-t5-embeddings: https://www.kaggle.com/datasets/anoreo/cafa6-t5-embeddings
-  protein-go-annotations: https://www.kaggle.com/datasets/seddiktrk/protein-go-annotations
-  train_targets_top500: https://www.kaggle.com/datasets/siddhvr/train-targets-top500
-2.  **Sắp xếp thư mục:** Tạo thư mục `input` tại thư mục gốc và giải nén dữ liệu vào đó.
+#### Dataset chính
+- **CAFA 6 Competition dataset**: [Kaggle CAFA 6 Competition](https://www.kaggle.com/competitions/cafa-6-protein-function-prediction)
+
+#### Các dataset bổ sung
+- **blast-quick-sprof-zero-pred**: [Link Kaggle](https://www.kaggle.com/code/taylorsamarel/cafa-6-protein-function-starter-eda-model)
+- **cafa-5-ems-2-embeddings-numpy**: [Link Kaggle](https://www.kaggle.com/datasets/viktorfairuschin/cafa-5-ems-2-embeddings-numpy)
+- **cafa-6-t5-embeddings**: [Link Kaggle](https://www.kaggle.com/datasets/lolik228/cafa-6-t5-embeddings)
+- **cafa6-t5-embeddings**: [Link Kaggle](https://www.kaggle.com/datasets/anoreo/cafa6-t5-embeddings)
+- **protein-go-annotations**: [Link Kaggle](https://www.kaggle.com/datasets/seddiktrk/protein-go-annotations)
+- **train_targets_top500**: [Link Kaggle](https://www.kaggle.com/datasets/siddhvr/train-targets-top500)
+
+### 2.  **Sắp xếp thư mục:** Tạo thư mục `input` tại thư mục gốc và giải nén dữ liệu vào đó.
 
 Cấu trúc thư mục dự kiến:
 
